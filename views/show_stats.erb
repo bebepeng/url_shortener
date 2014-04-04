@@ -1,6 +1,6 @@
 <html>
 <head>
-  <title>Stats for <%= new_url %></title>
+  <title>Stats for <%= request.host %><%= id %></title>
   <link href="<%= url('css/stylesheet.css') %>" rel="stylesheet" type="text/css"/>
 </head>
 <body>
@@ -18,7 +18,7 @@
       "Shortened" URL
     </td>
     <td>
-      <%= new_url %>
+      <%= request.host %><%= id %>
     </td>
   </tr>
   <tr>

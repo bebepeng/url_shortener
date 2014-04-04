@@ -1,23 +1,18 @@
 class UrlShortener
-  attr_reader :url
+  attr_reader :url, :url_hash
 
-  def initialize(url)
+  def initialize(id, url)
     @url = url
-  end
-
-  def shorten(id, domain)
-    url_hash = {}
-    url_hash[:old_url] = create_usable_url
-    url_hash[:new_url] = "#{domain}#{id}"
-    url_hash[:stats] = true
-    url_hash[:total_visits] = 0
-    url_hash
+    @url_hash = {}
+    @url_hash[:old_url] = create_usable_url
+    @url_hash[:id] = id.to_s
+    @url_hash[:total_visits] = 0
   end
 
   def create_usable_url
-    if /(https:\/\/)/.match(@url) != nil
+    if /(^https:\/\/)/.match(@url) != nil
       "#{url}"
-    elsif /(http:\/\/)/.match(@url) != nil
+    elsif /(^http:\/\/)/.match(@url) != nil
       "#{url}"
     else
       "http://#{url}"
