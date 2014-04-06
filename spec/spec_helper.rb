@@ -1,4 +1,8 @@
+require 'sequel'
+
 ENV['RACK_ENV'] = 'test'
+
+URL_DATABASE = Sequel.connect('postgres://gschool_user:gschool_user@localhost:5432/url_database_test')
 
 RSpec.configure do |config|
   config.treat_symbols_as_metadata_keys_with_true_values = true
