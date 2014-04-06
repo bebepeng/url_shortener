@@ -1,7 +1,7 @@
 class UrlRepository
 
-  def initialize(table)
-    @url_table = table
+  def initialize(db)
+    @url_table = db[:urls]
   end
 
   def insert(url)

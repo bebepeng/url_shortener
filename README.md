@@ -20,15 +20,21 @@ on social media.
 
 1. Fork/clone repository
 
+2. Create databases by running `createdb -U gschool_user url_database` and `createdb - U gschool_user url_database_test`
+
 2. Run Bundler by typing `bundle install`
 
 Bundler will download and install the required gems to run the URL shortener
 
-3. Run test suite by typing `rspec`
+4. run `sequel -m db/migrate postgres://gschool_user:gschool_user@localhost:5432/url_database_test`
+
+3. run `rake db:migrate`
+
+4. Run test suite by typing `rspec`
 
 The tests are written in Capybara and RSpec
 
-4. Type `rerun rackup` to initiate the local server
+5. Type `rerun rackup` to initiate the local server
 
 Rerun is a gem that will automatically restart the local server each time a change
 is made.

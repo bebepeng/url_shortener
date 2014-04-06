@@ -2,16 +2,9 @@ require 'sinatra/base'
 require './lib/url_repository'
 require './lib/url_validator'
 
-class App < Sinatra::Base
+class App < Sinatra::Application
 
-  URL_DATABASE.create_table! :urls do
-    primary_key :id
-    String :original_url
-    Integer :visits, :default => 0
-  end
-  URL_TABLE = URL_DATABASE[:urls]
-  LINKS_REPO = UrlRepository.new(URL_TABLE)
-
+  LINKS_REPO = UrlRepository.new(DB)
 
   enable :sessions
 

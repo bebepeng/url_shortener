@@ -3,20 +3,14 @@ require 'url_repository'
 
 describe UrlRepository do
   before do
-    URL_DATABASE.create_table! :urls do
-      primary_key :id
-      String :original_url
-      Integer :visits, :default => 0
-    end
-    url_table = URL_DATABASE[:urls]
-    @repository = UrlRepository.new(url_table)
+    @repository = UrlRepository.new(DB)
   end
 
   it 'can return the number of visits for a particular url' do
-    @repository.insert('http://www.google.com')
-    @repository.add_visit(1)
-    @repository.add_visit(1)
-    expect(@repository.get_visits(1)).to eq 2
+    id = @repository.insert('http://www.google.com')
+    @repository.add_visit(id)
+    @repository.add_visit(id)
+    expect(@repository.get_visits(id)).to eq 2
   end
 
   it 'can recall the original url by id' do

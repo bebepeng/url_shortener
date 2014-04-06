@@ -1,5 +1,9 @@
-require './app'
 require 'sequel'
+require 'dotenv'
 
-URL_DATABASE = Sequel.connect('postgres://gschool_user:gschool_user@localhost:5432/url_database')
+Dotenv.load
+
+DB = Sequel.connect(ENV['DATABASE_URL'])
+require './app'
+
 run App

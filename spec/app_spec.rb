@@ -73,13 +73,14 @@ feature 'setting up url shortener app' do
         click_button 'Shorten'
       end
       expect(page).to have_content 'Visits: 0'
+
+      id = "#{current_path.gsub('/','')}"
       5.times do
-        visit '/5'
+        visit "/#{id}"
       end
       5.times do
-        visit '/1?stats=true'
+        visit "/#{id}?stats=true"
       end
-      visit '/5?stats=true'
       expect(page).to have_content 'Visits: 5'
     end
   end
