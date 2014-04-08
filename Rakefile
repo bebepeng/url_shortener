@@ -9,6 +9,7 @@ namespace :db do
     require "sequel"
     Sequel.extension :migration
     DB = Sequel.connect(ENV['DATABASE_URL'])
+    DB_TEST = Sequel.connect(ENV['DATABASE_URL_TEST'])
   end
 
   desc "Prints current schema version"
@@ -18,11 +19,17 @@ namespace :db do
               end || 0
 
     puts "Schema Version: #{version}"
+    version_test = if DB_TEST.tables.include?(:schema_info)
+                DB_TEST[:schema_info].first[:version]
+              end || 0
+
+    puts "Test Schema Version: #{version_test}"
   end
 
   desc "Perform migration up to latest migration available"
   task :migrate => :sequel do
     Sequel::Migrator.run(DB, "db/migrate")
+    Sequel::Migrator.run(DB_TEST, "db/migrate")
     Rake::Task['db:version'].execute
   end
 end
