@@ -13,6 +13,12 @@ describe UrlValidator do
     expect(url.url_is_valid?).to eq true
   end
 
+  it 'returns an empty string for the error of a valid url' do
+    url = UrlValidator.new('http://google.com')
+    url.url_is_valid?
+    expect(url.error).to eq ''
+  end
+
   it 'returns an error message for invalid urls' do
     url = UrlValidator.new('http://google')
     url.url_is_valid?
