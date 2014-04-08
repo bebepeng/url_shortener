@@ -1,6 +1,7 @@
 require 'sinatra/base'
 require './lib/url_repository'
 require './lib/url_validator'
+require './lib/pad_url'
 
 class App < Sinatra::Application
 
@@ -13,14 +14,13 @@ class App < Sinatra::Application
   end
 
   post '/' do
-    url = params[:url]
-    url_to_shorten = UrlValidator.new(url)
-    if url_to_shorten.url_is_valid?
-      url = url_to_shorten.create_usable_url
+    url = PadUrl.call(params[:url])
+    url_validation_result = UrlValidator.new(url).validate
+    if url_validation_result.validity
       id = LINKS_REPO.insert(url)
       redirect "/#{id}?stats=true"
     else
-      session[:message] = url_to_shorten.error
+      session[:message] = url_validation_result.error
       redirect '/'
     end
   end
