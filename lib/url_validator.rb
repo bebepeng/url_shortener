@@ -1,4 +1,4 @@
-require 'url_validation_result'
+require './lib/url_validation_result'
 
 class UrlValidator
 

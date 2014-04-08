@@ -35,12 +35,6 @@ For more information on gems please visit http://rubygems.org
 
 ##Project URLs
 
-Tracker Project:
-https://www.pivotaltracker.com/n/projects/1047372
-
 Staging environment:
-http://sheltered-chamber-7594.herokuapp.com
-
-Production environment:
-http://sheltered-shore-2572.herokuapp.com
+http://better-url-shortener-staging.herokuapp.com/
  
