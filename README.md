@@ -24,7 +24,7 @@ on social media.
 
 Bundler will download and install the required gems to run the URL shortener
 
-1. create a .env file with to establish your environment variables (user, password, host, port need to be filled in):
+1. create .env file with to establish your environment variables (user, password, host, port need to be filled in):
 `DATABASE_URL=postgres://user:password@host:port/url_database` and
 `DATABASE_URL_TEST=postgres://user:password@host:port/url_database_test`
 
