@@ -5,7 +5,7 @@ require './app'
 Capybara.app = App
 Capybara.app_host = 'http://localhost:9292'
 
-feature 'setting up url shortener app' do
+feature 'url shortener app' do
   scenario 'user can submit a link, see the new shortened url, and is redirected to the original url if they click on it' do
     visit '/'
     fill_in 'Enter URL to shorten', :with => 'http://gschool.it'
@@ -34,54 +34,55 @@ feature 'setting up url shortener app' do
     visit 'http://localhost:9292/3'
     expect(current_url).to eq 'http://gschool.it/'
 
-    the 'user can return to the homepage to shorten another link' do
-      visit '/'
-      fill_in 'Enter URL to shorten', :with => 'gschool.it'
-      within 'form' do
-        click_button 'Shorten'
-      end
-      click_link '"Shorten" another URL'
-    end
+  end
 
-    and_the 'user sees an error message on the homepage if they enter an invalid url' do
-      visit '/'
-      fill_in 'Enter URL to shorten', :with => 'gschool'
-      within 'form' do
-        click_button 'Shorten'
-      end
-      expect(page).to have_content 'The text you entered is not a valid URL.'
+  scenario 'user can return to the homepage to shorten another link' do
+    visit '/'
+    fill_in 'Enter URL to shorten', :with => 'gschool.it'
+    within 'form' do
+      click_button 'Shorten'
     end
+    click_link '"Shorten" another URL'
+  end
 
-    and_the 'user sees and error message on the homepage if they leave the input field blank' do
-      visit '/'
-      fill_in 'Enter URL to shorten', :with => ''
-      within 'form' do
-        click_button 'Shorten'
-      end
-      expect(page).to have_content 'The URL cannot be blank'
+  scenario 'user sees an error message on the homepage if they enter an invalid url' do
+    visit '/'
+    fill_in 'Enter URL to shorten', :with => 'gschool'
+    within 'form' do
+      click_button 'Shorten'
     end
+    expect(page).to have_content 'The text you entered is not a valid URL.'
+  end
 
-    and_the 'user will not see an error message when they refresh the page' do
-      visit '/'
-      expect(page).to_not have_content 'The URL cannot be blank'
+  scenario 'user sees and error message on the homepage if they leave the input field blank' do
+    visit '/'
+    fill_in 'Enter URL to shorten', :with => ''
+    within 'form' do
+      click_button 'Shorten'
     end
+    expect(page).to have_content 'The URL cannot be blank'
+  end
 
-    and_the 'user will see the number of times the shortened URL has been clicked on the stats page' do
-      visit '/'
-      fill_in 'Enter URL to shorten', :with => 'google.com'
-      within 'form' do
-        click_button 'Shorten'
-      end
-      expect(page).to have_content 'Visits: 0'
+  scenario 'user will not see an error message when they refresh the page' do
+    visit '/'
+    expect(page).to_not have_content 'The URL cannot be blank'
+  end
 
-      id = "#{current_path.gsub('/','')}"
-      5.times do
-        visit "/#{id}"
-      end
-      5.times do
-        visit "/#{id}?stats=true"
-      end
-      expect(page).to have_content 'Visits: 5'
+  scenario 'user will see the number of times the shortened URL has been clicked on the stats page' do
+    visit '/'
+    fill_in 'Enter URL to shorten', :with => 'google.com'
+    within 'form' do
+      click_button 'Shorten'
     end
+    expect(page).to have_content 'Visits: 0'
+
+    id = "#{current_path.gsub('/', '')}"
+    5.times do
+      visit "/#{id}"
+    end
+    5.times do
+      visit "/#{id}?stats=true"
+    end
+    expect(page).to have_content 'Visits: 5'
   end
 end

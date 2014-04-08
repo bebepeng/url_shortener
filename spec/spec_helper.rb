@@ -14,9 +14,3 @@ RSpec.configure do |config|
 
   config.order = 'random'
 end
-
-def the(message)
-  yield
-end
-
-alias and_the the
