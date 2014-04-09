@@ -26,11 +26,11 @@ class App < Sinatra::Application
     else
       session[:vanity] = vanity
       session[:url] = params[:url]
-        if LINKS_REPO.has_vanity?(vanity)
-          message_vanity = 'That vanity is already taken'
-        else
-          message_vanity = vanity_error
-        end
+      if LINKS_REPO.has_vanity?(vanity)
+        message_vanity = 'That vanity is already taken'
+      else
+        message_vanity = vanity_error
+      end
       message_url = url_validation_result.error
       session[:message_url] = message_url
       session[:message_vanity] = message_vanity
@@ -38,17 +38,17 @@ class App < Sinatra::Application
     end
   end
 
-  get '/:id' do
-    id = params[:id]
-    old_url = LINKS_REPO.get_url(id)
+  get '/:identification' do
+    identification = params[:identification]
+    old_url = LINKS_REPO.get_url(identification)
     if params[:stats]
       erb :show_stats, :locals => {:old_url => old_url,
-                                   :id => id,
-                                   :visit_count => LINKS_REPO.get_visits(id),
+                                   :id => identification,
+                                   :visit_count => LINKS_REPO.get_visits(identification),
                                    :domain => request.host_with_port}
     else
-      LINKS_REPO.add_visit(id)
-      redirect LINKS_REPO.get_url(id)
+      LINKS_REPO.add_visit(identification)
+      redirect LINKS_REPO.get_url(identification)
     end
   end
 end

@@ -6,6 +6,8 @@ Capybara.app = App
 Capybara.app_host = 'http://localhost:9292'
 
 feature 'url shortener app' do
+  DB[:urls].delete
+
   scenario 'user can submit a link, see the new shortened url, and is redirected to the original url if they click on it' do
     visit '/'
     fill_in 'Enter URL to shorten', :with => 'http://gschool.it'
