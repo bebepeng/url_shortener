@@ -21,7 +21,6 @@ class App < Sinatra::Application
     vanity_error = VanityError.get_error(vanity)
     if url_validation_result.validity && !LINKS_REPO.has_vanity?(vanity) && vanity_error.empty?
       identification = LINKS_REPO.insert(url, vanity)
-      puts "Identification is #{identification}"
       redirect "/#{identification}?stats=true"
     else
       session[:vanity] = vanity
