@@ -9,7 +9,7 @@ class UrlRepository
       @url_table.insert(:original_url => url, :vanity => vanity)
       vanity
     else
-      @url_table.insert(:original_url => url, :vanity => nil)
+      @url_table.insert(:original_url => url, :vanity => nil).to_s
     end
   end
 
