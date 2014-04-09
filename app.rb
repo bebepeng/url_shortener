@@ -2,6 +2,7 @@ require 'sinatra/base'
 require './lib/url_repository'
 require './lib/url_validator'
 require './lib/pad_url'
+require './lib/vanity_error'
 
 class App < Sinatra::Application
 
@@ -17,19 +18,22 @@ class App < Sinatra::Application
     url = PadUrl.call(params[:url])
     vanity = params[:vanity]
     url_validation_result = UrlValidator.new(url).validate
-    if url_validation_result.validity && !LINKS_REPO.has_vanity?(vanity)
+    vanity_error = VanityError.get_error(vanity)
+    if url_validation_result.validity && !LINKS_REPO.has_vanity?(vanity) && vanity_error.empty?
       identification = LINKS_REPO.insert(url, vanity)
       puts "Identification is #{identification}"
       redirect "/#{identification}?stats=true"
     else
       session[:vanity] = vanity
       session[:url] = params[:url]
-      if LINKS_REPO.has_vanity?(vanity) && !vanity.empty?
-        error = 'That vanity is already taken'
-      else
-        error = url_validation_result.error
-      end
-      session[:message] = error
+        if LINKS_REPO.has_vanity?(vanity)
+          message_vanity = 'That vanity is already taken'
+        else
+          message_vanity = vanity_error
+        end
+      message_url = url_validation_result.error
+      session[:message_url] = message_url
+      session[:message_vanity] = message_vanity
       redirect '/'
     end
   end
