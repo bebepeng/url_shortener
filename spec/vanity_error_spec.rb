@@ -17,4 +17,8 @@ describe VanityError do
   it "lets me know if the vanity contains a profanity" do
     expect(VanityError.get_error('shit')).to eq 'No Profanity Please.'
   end
+
+  it "lets me know if the vanity contains numbers or symbols" do
+    expect(VanityError.get_error('dr34m!')).to eq 'Letters Only'
+  end
 end

@@ -95,6 +95,16 @@ feature 'url shortener app' do
     expect(page).to have_content 'Vanity URLs must be under 13 characters'
   end
 
+  scenario 'user will see an error when vanity url contains numbers' do
+    visit '/'
+    fill_in 'Enter URL to shorten', :with => 'google.com'
+    fill_in 'vanity', :with => 'weee33'
+    within 'form' do
+      click_button 'Shorten'
+    end
+    expect(page).to have_content 'Letters Only'
+  end
+
   scenario 'user will not see an error message when they refresh the page' do
     visit '/'
     fill_in 'Enter URL to shorten', :with => ''

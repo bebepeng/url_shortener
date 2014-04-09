@@ -7,15 +7,23 @@
 <div class="url_shorten_container">
   <form action="/" method="post">
     <p class="error_message"><%= session[:message_url] %></p>
-    <% session.delete(:message) %>
+    <% session.delete(:message_url) %>
     <input type="text" placeholder="Enter URL to shorten" value="<%= session[:url] %>" name="url">
     <% session.delete(:url) %>
     <p class="error_message"><%= session[:message_vanity] %></p>
-    <% session.delete(:message) %>
+    <% session.delete(:message_vanity) %>
     <input type="text" placeholder="Optional: Enter a Vanity URL" value="<%= session[:vanity] %>" name="vanity">
     <% session.delete(:vanity) %>
     <input type="submit" value="Shorten">
   </form>
+  <div class="guidelines">
+    <p>URL Shortener Guidelines:</p>
+    <ul>
+      <li>Vanity URLs cannot contain profanities</li>
+      <li>Vanity URLs must be less than 13 characters</li>
+      <li>Vanity URLs may only contain letters</li>
+    </ul>
+  </div>
 </div>
 </body>
 </html>
