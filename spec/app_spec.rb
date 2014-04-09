@@ -13,27 +13,21 @@ feature 'url shortener app' do
       click_button 'Shorten'
     end
     expect(page).to have_content 'http://gschool.it'
-    visit 'http://localhost:9292/1'
+    id = "#{current_path.gsub('/', '')}"
+    visit "http://localhost:9292/#{id}"
     expect(current_url).to eq 'http://gschool.it/'
+  end
 
+  scenario 'user can shorten a url using vanity' do
     visit '/'
-    fill_in 'Enter URL to shorten', :with => 'www.gschool.it'
+    fill_in 'Enter URL to shorten', :with => 'www.google.com'
+    fill_in 'vanity', :with => 'goo'
     within 'form' do
       click_button 'Shorten'
     end
-    expect(page).to have_content 'www.gschool.it'
-    visit 'http://localhost:9292/2'
-    expect(current_url).to eq 'http://www.gschool.it/'
-
-    visit '/'
-    fill_in 'Enter URL to shorten', :with => 'gschool.it'
-    within 'form' do
-      click_button 'Shorten'
-    end
-    expect(page).to have_content 'gschool.it'
-    visit 'http://localhost:9292/3'
-    expect(current_url).to eq 'http://gschool.it/'
-
+    expect(page).to have_content '/goo'
+    visit 'http://localhost:9292/goo'
+    expect(current_url).to eq 'http://www.google.com/'
   end
 
   scenario 'user can return to the homepage to shorten another link' do
@@ -43,6 +37,7 @@ feature 'url shortener app' do
       click_button 'Shorten'
     end
     click_link '"Shorten" another URL'
+    expect(page).to have_title 'URL Shortener'
   end
 
   scenario 'user sees an error message on the homepage if they enter an invalid url' do
@@ -63,9 +58,31 @@ feature 'url shortener app' do
     expect(page).to have_content 'The URL cannot be blank'
   end
 
+  scenario 'user sees and error message if a vanity already exists' do
+    visit '/'
+    fill_in 'Enter URL to shorten', :with => 'google.com'
+    fill_in 'vanity', :with => 'foo'
+    within 'form' do
+      click_button 'Shorten'
+    end
+
+    click_link '"Shorten" another URL'
+    fill_in 'Enter URL to shorten', :with => 'gschool.it'
+    fill_in 'vanity', :with => 'foo'
+    within 'form' do
+      click_button 'Shorten'
+    end
+    expect(page).to have_content 'That vanity is already taken'
+  end
+
   scenario 'user will not see an error message when they refresh the page' do
     visit '/'
-    expect(page).to_not have_content 'The URL cannot be blank'
+    fill_in 'Enter URL to shorten', :with => ''
+    within 'form' do
+      click_button 'Shorten'
+      visit '/'
+      expect(page).to_not have_content 'The URL cannot be blank'
+    end
   end
 
   scenario 'user will see the number of times the shortened URL has been clicked on the stats page' do

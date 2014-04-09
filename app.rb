@@ -15,18 +15,25 @@ class App < Sinatra::Application
 
   post '/' do
     url = PadUrl.call(params[:url])
+    vanity = params[:vanity]
     url_validation_result = UrlValidator.new(url).validate
-    if url_validation_result.validity
-      id = LINKS_REPO.insert(url)
-      redirect "/#{id}?stats=true"
+    if url_validation_result.validity && !LINKS_REPO.has_vanity?(vanity)
+      identification = LINKS_REPO.insert(url, vanity)
+      puts "Identification is #{identification}"
+      redirect "/#{identification}?stats=true"
     else
-      session[:message] = url_validation_result.error
+      if LINKS_REPO.has_vanity?(vanity) && !vanity.empty?
+        error = 'That vanity is already taken'
+      else
+        error = url_validation_result.error
+      end
+      session[:message] = error
       redirect '/'
     end
   end
 
   get '/:id' do
-    id = params[:id].to_i
+    id = params[:id]
     old_url = LINKS_REPO.get_url(id)
     if params[:stats]
       erb :show_stats, :locals => {:old_url => old_url,

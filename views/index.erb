@@ -9,6 +9,7 @@
   <% session.delete(:message) %>
   <form action="/" method="post">
     <input type="text" placeholder="Enter URL to shorten" name="url">
+    <input type="text" placeholder="Optional: Enter a Vanity URL" name="vanity">
     <input type="submit" value="Shorten">
   </form>
 </div>
