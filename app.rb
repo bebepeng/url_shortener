@@ -22,6 +22,8 @@ class App < Sinatra::Application
       puts "Identification is #{identification}"
       redirect "/#{identification}?stats=true"
     else
+      session[:vanity] = vanity
+      session[:url] = params[:url]
       if LINKS_REPO.has_vanity?(vanity) && !vanity.empty?
         error = 'That vanity is already taken'
       else
