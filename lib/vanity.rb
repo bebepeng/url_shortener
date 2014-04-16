@@ -1,16 +1,24 @@
 require 'yaml'
 require 'obscenity'
 
-class VanityError
-  def self.get_error(vanity)
+class Vanity
+  def initialize(vanity)
+    @vanity = vanity
+  end
+
+  def valid?
+    error.nil?
+  end
+
+  def error
     if Obscenity.profane?(vanity)
       'No Profanity Please.'
     elsif vanity =~ /\d|\W/
       'Letters Only'
     elsif vanity.length > 12
       'Vanity URLs must be under 13 characters'
-    else
-      ''
     end
   end
+
+  attr_reader :vanity
 end

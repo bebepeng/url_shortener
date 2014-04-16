@@ -1,8 +1,8 @@
 require 'sinatra/base'
 require './lib/url_repository'
-require './lib/url_validator'
-require './lib/pad_url'
-require './lib/vanity_error'
+require './lib/url'
+require './lib/shortener_constraints'
+require './lib/vanity'
 
 class App < Sinatra::Application
 
@@ -15,24 +15,18 @@ class App < Sinatra::Application
   end
 
   post '/' do
-    url = PadUrl.call(params[:url])
-    vanity = params[:vanity]
-    url_validation_result = UrlValidator.new(url).validate
-    vanity_error = VanityError.get_error(vanity)
-    if url_validation_result.validity && !LINKS_REPO.has_vanity?(vanity) && vanity_error.empty?
-      identification = LINKS_REPO.insert(url, vanity)
+    url = Url.new(params[:url])
+    vanity = Vanity.new(params[:vanity])
+    shortener_constraints = ShortenerConstraints.new(url, vanity, LINKS_REPO)
+
+    if shortener_constraints.valid?
+      identification = shortener_constraints.save
       redirect "/#{identification}?stats=true"
     else
-      session[:vanity] = vanity
+      session[:vanity] = params[:vanity]
       session[:url] = params[:url]
-      if LINKS_REPO.has_vanity?(vanity)
-        message_vanity = 'That vanity is already taken'
-      else
-        message_vanity = vanity_error
-      end
-      message_url = url_validation_result.error
-      session[:message_url] = message_url
-      session[:message_vanity] = message_vanity
+      session[:message_url] = shortener_constraints.errors[0]
+      session[:message_vanity] = shortener_constraints.errors[1]
       redirect '/'
     end
   end
